@@ -49,6 +49,125 @@
             </div>
           </nav>
 
+          <section class="container hero">
+            <div class="row align-items-center h-100">
+              <div class="col-12 col-lg-6">
+                  <h1>The Developer <br> Community Forum</h1>
+                  <p>Tempat berkumpulnya para profesional IT untuk berbagi pengetahuan, mendiskusikan teknologi terbaru, dan menyelesaikan tantangan yang dihadapi dalam dunia digital.</p>
+                  <a href="" class="btn btn-primary me-2 mb-lg-0"> Sign Up</a>
+                  <a href="" class="btn btn-secondary mb-2 mb-lg-0">Join Diskusi</a>
+              </div>
+              <div class="col-12 col-lg-6 h-315px order-first order-lg-last mb-3 mb-lg-0">
+                <img class="hero-image float-lg-end" src="{{ url('assets/images/Hero.png') }}" alt="hero">
+              </div>
+            </div>
+          </section>
+
+          <section class="container min-h-372px">
+            <div class="row">
+              <div class="col-12 col-lg-4 text-center">
+                <img class="promote-icon mb-2" src="{{ url('assets/images/discussions.png') }}" alt="discussions">
+                <h2>Discussions</h2>
+                <p class="fs-3">2343</p>
+              </div>
+              <div class="col-12 col-lg-4 text-center">
+                <img class="promote-icon mb-2" src="{{ url('assets/images/answers.png') }}" alt="answers">
+                <h2>Answers</h2>
+                <p class="fs-3">3255</p>
+              </div>
+              <div class="col-12 col-lg-4 text-center">
+                <img class="promote-icon mb-2" src="{{ url('assets/images/users.png') }}" alt="users">
+                <h2>Users</h2>
+                <p class="fs-3">12312</p>
+              </div>
+          </section>
+
+          <section class="bg-gray">
+            <div class="container py-80px">
+              <h2 class="text-center mb-5">Help Others</h2>
+              <div class="row">
+                <div class="col-12 col-lg-4 mb-3">
+                  <div class="card">
+                    <a href="#">
+                      <h3>Cara menambah validasi custom di Laravel 11?</h3>
+                    </a>
+                    <div>
+                      <p class="mb-5">Saya sedang mengerjakan aplikasi blog di Laravel 8. Ada 4 peran pengguna, di antaranya ...</p>
+                      <div class="row">
+                        <div class="col me-1 me-lg-2">
+                          <a href=""><span class="badge rounded-pill text-bg-light ">Eloquent</span></a>
+                        </div>
+                        <div class="col-5 col-lg-7">
+                          <div class="avatar-sm-wrapper d-inline-block">
+                            <a href="" class="me-1">
+                              <img src="{{ url('assets/images/avatar.png') }}" class="avatar rounded-circle" alt="">
+                            </a>
+                          </div>
+                          <span class="fs-12px">
+                            <a href="" class="me-1 fw-bold">Faza  Radit</a>
+                            <span class="color-gray">7 hours ago</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4 mb-3">
+                  <div class="card">
+                    <a href="#">
+                      <h3>Cara menambah validasi custom di Laravel 11?</h3>
+                    </a>
+                    <div>
+                      <p class="mb-5">Saya sedang mengerjakan aplikasi blog di Laravel 8. Ada 4 peran pengguna, di antaranya ...</p>
+                      <div class="row">
+                        <div class="col me-1 me-lg-2">
+                          <a href=""><span class="badge rounded-pill text-bg-light ">Eloquent</span></a>
+                        </div>
+                        <div class="col-5 col-lg-7">
+                          <div class="avatar-sm-wrapper d-inline-block">
+                            <a href="" class="me-1">
+                              <img src="{{ url('assets/images/avatar.png') }}" class="avatar rounded-circle" alt="">
+                            </a>
+                          </div>
+                          <span class="fs-12px">
+                            <a href="" class="me-1 fw-bold">Faza  Radit</a>
+                            <span class="color-gray">7 hours ago</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4 mb-3">
+                  <div class="card">
+                    <a href="#">
+                      <h3>Cara menambah validasi custom di Laravel 11?</h3>
+                    </a>
+                    <div>
+                      <p class="mb-5">Saya sedang mengerjakan aplikasi blog di Laravel 8. Ada 4 peran pengguna, di antaranya ...</p>
+                      <div class="row">
+                        <div class="col me-1 me-lg-2">
+                          <a href=""><span class="badge rounded-pill text-bg-light ">Eloquent</span></a>
+                        </div>
+                        <div class="col-5 col-lg-7">
+                          <div class="avatar-sm-wrapper d-inline-block">
+                            <a href="" class="me-1">
+                              <img src="{{ url('assets/images/avatar.png') }}" class="avatar rounded-circle" alt="">
+                            </a>
+                          </div>
+                          <span class="fs-12px">
+                            <a href="" class="me-1 fw-bold">Faza  Radit</a>
+                            <span class="color-gray">7 hours ago</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </body>
 </html>
