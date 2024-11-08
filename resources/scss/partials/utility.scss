@@ -1,61 +1,62 @@
-.h-32px{
+.h-32px {
     height: 32px;
 }
 
-.navbar-nav{
-    .nav-link,active{
+.navbar-nav {
+    .nav-link,
+    active {
         color: $white;
         font-weight: bold;
     }
 
-    .nav-link{
+    .nav-link {
         color: $white;
 
-        &:hover{
+        &:hover {
             color: $gray-200;
         }
     }
 }
 
-.nav-item{
+.nav-item {
     padding-left: 0;
     padding-right: 0;
 }
 
 @include media-breakpoint-up(lg) {
-    .nav-item{
+    .nav-item {
         padding-left: 20px;
         padding-right: 20px;
     }
 }
 
-.btn-primary-white{
+.btn-primary-white {
     background-color: $white;
     color: $primary;
     border-radius: 50px;
     padding: 10px 24px;
     min-width: 128px;
 
-    &:hover{
+    &:hover {
         background-color: $gray-200;
         color: $primary;
     }
 }
 
-.btn-primary{
+.btn-primary {
     background-color: $primary;
     color: $white;
     border-radius: 50px;
     padding: 10px 24px;
     min-width: 128px;
 
-    &:hover{
+    &:hover {
         background-color: $white;
         color: $primary;
     }
 }
 
-.btn-secondary{
+.btn-secondary {
     background-color: $white;
     border-color: $primary;
     color: $primary;
@@ -63,76 +64,92 @@
     padding: 10px 24px;
     min-width: 128px;
 
-    &:hover{
+    &:hover {
         background-color: $primary;
         color: $white;
         border-color: $primary;
     }
 }
 
-.h-315px{
+.h-315px {
     height: 415px;
 }
 
-.min-h-372px{
+.min-h-372px {
     min-height: 372px;
 }
 
-.bg-gray{
+.bg-gray {
+    background-color: $gray-200;
+}
+
+.bg-grayy {
     background-color: $gray-100;
 }
 
-.py-80px{
+.py-80px {
     padding-top: 80px;
     padding-bottom: 80px;
 }
 
-.card{
-    background-color: #C8ACD6;
+.card {
+    background-color: #c8acd6;
     border: none;
     border-radius: 20px;
     padding: 24px;
 }
 
-a{
+.cardd {
+    background-color: #fdfdfd;
+    border: none;
+    border-radius: 20px;
+    padding: 24px;
+}
+
+a {
     text-decoration: none;
     color: inherit;
 }
 
-.color-gray{
-    color: #433D8B;
+.color-gray {
+    color: #433d8b;
 }
 
-.card--avatar-sm{
+.card--avatar-sm {
     width: 18px;
     height: 18px;
 }
 
-.text-bg-light{
-    &:hover{
+.text-bg-light {
+    &:hover {
         color: $primary !important;
     }
 }
 
-.avatar-sm-wrapper{
+.avatar-sm-wrapper {
     width: 18px;
     height: 18px;
 }
 
-.avater{
+.avater {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.fs-12px{
+.fs-12px {
     font-size: 12px;
 }
 
-footer{
-    background-color: #2E236C;
+footer {
+    background-color: #2e236c;
 }
 
-.me-140px{
+.me-140px {
     margin-right: 140px;
+}
+
+.like-icon {
+    width: 32px;
+    height: 32px;
 }
