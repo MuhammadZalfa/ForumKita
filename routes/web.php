@@ -25,3 +25,7 @@ Route::get('diskusi/lorem', function () {
 Route::get('diskusi/create', function () {
     return view('pages.discussion.form');
 })->name('create-form');
+
+Route::get('answer/1', function () {
+    return view('pages.answers.form');
+})->name('answer.edit');
