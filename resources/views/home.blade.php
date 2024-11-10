@@ -11,8 +11,8 @@
         <a href="{{ route('sign-up') }}" class="btn btn-secondary mb-2 mb-lg-0">Join Diskusi</a>
     </div>
     <div class="col-12 col-lg-6 h-315px order-first order-lg-last mb-3 mb-lg-0">
-      <img class="hero-image float-lg-end" src="{{ url('assets/images/Hero.png') }}" alt="hero">
-    </div>
+      <img class="hero-image float-lg-end img-fluid" src="{{ url('assets/images/Hero.png') }}" alt="hero">
+    </div>    
   </div>
 </section>
 

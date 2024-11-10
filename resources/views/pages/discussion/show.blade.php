@@ -210,29 +210,24 @@
 @endsection
 
 @section('after-script')
-    @section('after-script')
-        <script>
-            $(document).ready(function () {
-                $('#share-discussion').click(function () {
-                    var copyText = $('#current-url')
+    <script>
+        $(document).ready(function () {
+            $('#share-discussionf').click(function () {
+                var copyText = $('#current-url')
 
-                    // Pilih teks pada elemen input
-                    copyText[0].select()
-                    copyText[0].setSelectionRange(0, 99999) // Fix typo
+                // Pilih teks pada input
+                copyText[0].select()
+                copyText[0].setSelectionRange(0, 99999) // Select seluruh teks
+                navigator.clipboard.writeText(copyText.val()) // Copy teks
 
-                    // Salin teks ke clipboard
-                    navigator.clipboard
-                        .writeText(copyText.val())
-                        .then(function () {
-                            // Jika berhasil disalin, tampilkan notifikasi atau pesan
-                            alert('URL berhasil disalin ke clipboard!')
-                        })
-                        .catch(function (err) {
-                            // Jika ada kesalahan saat menyalin
-                            console.error('Gagal menyalin URL: ', err)
-                        })
+                // SweetAlert untuk konfirmasi berhasil copy
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Link profil berhasil dicopy ke clipboard!',
+                    icon: 'success',
+                    confirmButtonText: 'Oke',
                 })
             })
-        </script>
-    @endsection
+        })
+    </script>
 @endsection

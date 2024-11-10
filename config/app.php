@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // .ENV Mapping
+
+    'avatar_generator_url' => @env('AVATAR_GENERATOR_URL'),
+
 ];

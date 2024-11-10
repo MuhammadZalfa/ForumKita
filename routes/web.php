@@ -29,3 +29,11 @@ Route::get('diskusi/create', function () {
 Route::get('answer/1', function () {
     return view('pages.answers.form');
 })->name('answer.edit');
+
+Route::get('users/arkan', function () {
+    return view('pages.users.show');
+})->name('users.show');
+
+Route::get('users/arkan/edit', function () {
+    return view('pages.users.form');
+})->name('users.edit');

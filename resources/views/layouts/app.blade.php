@@ -5,7 +5,6 @@
     </head>
     <body>
         @include('partials.nav')
-        @include('partials.alert')
         @yield('body')
         @include('partials.footer')
         @yield('before-script')
