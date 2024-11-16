@@ -41,7 +41,7 @@
     <div class="row">
       <div class="col-12 col-lg-4 mb-3">
         <div class="card">
-          <a href="{{ route('detail') }}">
+          <a href="{{ route('diskusi.show') }}">
             <h3>'Property of Non-Object' Error</h3>
           </a>
           <div>
@@ -67,7 +67,7 @@
       </div>
       <div class="col-12 col-lg-4 mb-3">
         <div class="card">
-          <a href="{{ route('detail') }}">
+          <a href="{{ route('diskusi.show') }}">
             <h3>Middleware go looping sometimes</h3>
           </a>
           <div>
@@ -93,7 +93,7 @@
       </div>
       <div class="col-12 col-lg-4 mb-3">
         <div class="card">
-          <a href="{{ route('detail') }}">
+          <a href="{{ route('diskusi.show') }}">
             <h3>How to add a custom validation in laravel 11?</h3>
           </a>
           <div>

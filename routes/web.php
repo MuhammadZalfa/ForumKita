@@ -1,39 +1,53 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\SignUpController;
+use App\Http\Controllers\LikeController;
 
+// Route untuk halaman create dan store untuk resource diskusi
+Route::middleware('auth')->group(function () {
+    // Rute untuk resource diskusi
+    Route::resource('diskusi', DiscussionController::class)
+        ->only(['create', 'store', 'edit', 'update', 'destroy']);
+
+    // Rute untuk like dan unlike
+    // Routes untuk like dan unlike diskusi
+    Route::post('/diskusi/{slug}/like', [LikeController::class, 'likeDiscussion'])->name('diskusi.like.like');
+    Route::post('/diskusi/{slug}/unlike', [LikeController::class, 'unlikeDiscussion'])->name('diskusi.like.unlike');    
+});
+
+Route::resource('diskusi', DiscussionController::class)
+    ->only(['index', 'show']);
+
+
+Route::group(['namespace' => 'App\Http\Controllers'], function () {
+    // Resource route untuk diskusi
+    Route::resource('diskusi', DiscussionController::class)->only(['index', 'show']);
+
+    // Route tunggal untuk kategori
+    Route::get('diskusi/kategori/{categorySlug}', [CategoryController::class, 'show'])
+        ->name('diskusi.kategori.show');
+});
+
+// Route untuk halaman lainnya
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::get('login', function () {
-    return view('pages.auth.login');
-})->name('login');
+// Route untuk Auth
+Route::namespace('App\Http\Controllers\Auth')->group(function () {
+    Route::get('login', 'LoginController@show')->name('auth.login.show');
+    Route::post('login', 'LoginController@login')->name('auth.login.login');
+    Route::post('logout', 'LoginController@logout')->name('auth.login.logout');
+    Route::get('register', 'SignUpController@show')->name('sign-up');
+    Route::post('register', 'SignUpController@signUp')->name('auth.sign-up.sign-up');
+});
 
-Route::get('register', function () {
-    return view('pages.auth.sign-up');
-})->name('sign-up');
-
-Route::get('diskusi', function () {
-    return view('pages.discussion.index');
-})->name('diskusi');
+// Route lainnya untuk melihat diskusi dan detailnya
 
 Route::get('diskusi/lorem', function () {
-    return view('pages.discussion.show');
-})->name('detail');
-
-Route::get('diskusi/create', function () {
-    return view('pages.discussion.form');
-})->name('create-form');
-
-Route::get('answer/1', function () {
-    return view('pages.answers.form');
-})->name('answer.edit');
-
-Route::get('users/arkan', function () {
     return view('pages.users.show');
-})->name('users.show');
-
-Route::get('users/arkan/edit', function () {
-    return view('pages.users.form');
-})->name('users.edit');
+})->name('profile');

@@ -168,3 +168,14 @@ pre {
     height: 128px;
 }
 
+.avatar-nav-wrapper {
+    width: 36px;
+    height: 36px;
+}
+
+.gambar {
+    object-fit: cover; /* atau contain, sesuai kebutuhan */
+    width: 100%; /* atau ukuran spesifik */
+    height: auto; /* menjaga rasio gambar */
+    border-radius: 50%; /* jika ingin gambar bulat */
+}

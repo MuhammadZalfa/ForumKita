@@ -10,7 +10,7 @@
                         <p>
                             <ul>
                                 <li>Stuck di error? diskusikan di ForumKita</li>
-                                <li>Dapatkan Jawab dari developer yang berpengalaman dari seluruh dunia</li>
+                                <li>Dapatkan Jawab dari developer•••••• yang berpengalaman dari seluruh dunia</li>
                                 <li>Berkontribusi dengan menjawab pertanyaan</li>
                             </ul>
                         </p>
@@ -24,32 +24,45 @@
                         <img src="{{ url('assets/images/LogoForumKitaa.png') }}" alt="" class="h-32px">
                     </a>
                     <div class="cardd mb-5">
-                        <form action="#">
+                        <form action="{{ route('auth.sign-up.sign-up') }}" method="POST">
+                            @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input
-                                    type="email"
-                                    class="form-control"
-                                    id="email"
-                                    placeholder="name@example.com"
-                                    autocomplete="off"
-                                    autofocus
-                                />
+                                type="email"
+                                class="form-control @error('email') is-invalid @enderror"
+                                id="email"
+                                name="email"
+                                placeholder="name@example.com"
+                                autocomplete="off"
+                                autofocus
+                                value="{{ old('email') }}"
+                            />
+                                @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
                                 <input
                                     type="text"
-                                    class="form-control"
+                                    class="form-control @error('username') is-invalid @enderror"
                                     id="username"
+                                    name="username"
+                                    value="{{ old('username') }}"
                                 />
+                                @error('username')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <div class="input-group">
                                     <input
                                         type="password"
-                                        class="form-control border-end-0 pe-0 rounded-0 rounded-start"
+                                        class="form-control border-end-0 pe-0 rounded-0 rounded-start @error('password') is-invalid @enderror"
                                         aria-describedby="basic-addon2"
                                         id="password"
                                         name="password"
@@ -59,6 +72,9 @@
                                             <img src="{{ url('assets/images/eye-slash.png') }}" alt="password-toggle" id="password-toggle-image">
                                         </a>
                                     </span>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="mb-3 d-grid">
@@ -67,7 +83,7 @@
                         </form>
                     </div>
                     <div class="text-center">
-                        Already have an account? <a href="{{ route('login') }}"><u>Log In</u></a>
+                        Already have an account? <a href="{{ route('auth.login.login') }}"><u>Log In</u></a>
                     </div>
                 </div>
             </div>

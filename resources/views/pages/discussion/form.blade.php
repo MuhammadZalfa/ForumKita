@@ -15,36 +15,59 @@
                     <div class="card card-discussions mb-5">
                         <div class="row">
                             <div class="col-12">
-                                <form action="" method="POST">
+                                <form action="{{ route('diskusi.store') }}" method="POST">
+                                    @csrf
                                     <div class="mb-3">
                                         <label for="title" class="form-label">Title</label>
-                                        <input type="text" class="form-control" id="title" name="title" autofocus />
+                                        <input
+                                            type="text"
+                                            class="form-control @error('title') is-invalid @enderror"
+                                            id="title"
+                                            name="title"
+                                            autofocus
+                                            value="{{ old('title') }}"
+                                        />
+                                        @error('title')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="category_slug" class="form-label">Category</label>
-                                        <select class="form-select" name="category_slug" id="category_slug">
-                                            <option value="programming-coding">Programming & Coding</option>
-                                            <option value="mobile-development">Mobile Development</option>
-                                            <option value="web-development">Web Development</option>
-                                            <option value="data-science-ml">Data Science & Machine Learning</option>
-                                            <option value="cloud-computing">Cloud Computing</option>
-                                            <option value="hardware-gadgets">Hardware & Gadgets</option>
-                                            <option value="game-development">Game Development</option>
-                                            <option value="ai-robotics">Artificial Intelligence & Robotics</option>
-                                            <option value="tech-news-trend">Tech News & Trend</option>
-                                            <option value="project-showcase">Project Showcase</option>
-                                            <option value="career-learning-resources">
-                                                Career & Learning Resources
-                                            </option>
+                                        <select
+                                            class="form-select @error('category_slug') is-invalid @enderror"
+                                            name="category_slug"
+                                            id="category_slug"
+                                        >
+                                            <option value="">-- Select Category --</option>
+                                            @foreach ($categories as $category)
+                                                <option
+                                                    value="{{ $category->slug }}"
+                                                    @if (old('category_slug') === $category->slug) {{ 'selected' }} @endif
+                                                >
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
                                         </select>
+                                        @error('category_slug')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="content" class="form-label">Question</label>
-                                        <textarea class="form-control" id="content" name="content"></textarea>
+                                        <textarea
+                                            class="form-control @error('content') is-invalid @enderror"
+                                            id="content"
+                                            name="content"
+                                        >
+{{ old('content') }}</textarea
+                                        >
+                                        @error('content')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="">
                                         <button class="btn btn-primary me-4" type="submit">Submit</button>
-                                        <a href="">Cancel</a>
+                                        <a href="{{ route('diskusi.index') }}">Cancel</a>
                                     </div>
                                 </form>
                             </div>
@@ -80,5 +103,18 @@
             $('.note-toolbar button').css('color', '#2e236c')
             $('span.note-icon-caret').css('color', '#2e236c')
         })
+    </script>
+    <script>
+        $(document).ready(function () {
+            // SweetAlert on success message
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: true,
+                });
+            @endif
+        });
     </script>
 @endsection

@@ -23,7 +23,7 @@
                         <p class="fw-bold fs-5 text-white">Link</p>
                         <ul class="list-unstyled">
                             <li class="text-white mb2"><a href="{{ route('home') }}">Home</a></li>
-                            <li class="text-white mb2"><a href="{{ route('diskusi') }}">Discussion</a></li>
+                            <li class="text-white mb2"><a href="{{ route('diskusi.index') }}">Discussion</a></li>
                             <li class="text-white mb2"><a href="#">About Us</a></li>
                         </ul>
                     </div>
