@@ -18,27 +18,22 @@
                                 <div
                                     class="col-1 d-inline-flex flex-column justify-content-start align-items-center text-center align-self-start"
                                 >
-                                    <!-- Link untuk like/unlike -->
                                     <a
-                                        href="javascript:;"
                                         id="discussion-like"
-                                        data-slug="{{ $discussion->slug }}"
-                                        data-liked="{{ auth()->check() && $discussion->likedByUser(auth()->user()) ? 1 : 0 }}"
+                                        href="javascript:;"
+                                        data-liked="{{ $discussion->liked() }}"
                                     >
-                                        <!-- Gambar like yang berubah sesuai status like -->
                                         <img
-                                            src="{{ auth()->check() && $discussion->likedByUser(auth()->user()) ? '/images/likee.png' : '/images/like.png' }}"
+                                            src="{{ $discussion->liked() ? $likedImage : $notLikedImage }}"
                                             alt="like"
-                                            class="like-icon mb-1"
                                             id="discussion-like-icon"
+                                            class="like-icon mb-1"
                                         />
                                     </a>
-                                    <!-- Menampilkan jumlah like -->
                                     <span class="color-gray mb-1" id="discussion-like-count">
-                                        {{ $discussion->likes->count() }}
+                                        {{ $discussion->likeCount }}
                                     </span>
                                 </div>
-
                                 <div class="col-11">
                                     <p>
                                         {!! $discussion->content !!}
@@ -136,6 +131,50 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card card-discussions mb-5">
+                                <div class="row align-items-center">
+                                    <div
+                                        class="col-1 d-inline-flex flex-column justify-content-start align-items-center text-center align-self-start"
+                                    >
+                                        <a href="">
+                                            <img
+                                                src="{{ url('assets/images/like.png') }}"
+                                                alt="like"
+                                                class="like-icon mb-1"
+                                            />
+                                        </a>
+                                        <span class="color-gray mb-1">12</span>
+                                    </div>
+                                    <div class="col-11">
+                                        <p>
+                                            lorem ipsum dolor sit amet contecstur lorem ipsum dolor sit amet
+                                            contecsturlorem ipsum dolor sit amet contecsturlorem ipsum dolor sit amet
+                                            contecstur
+                                        </p>
+                                        <div class="row align-item-end justify-content-end">
+                                            <div class="col-5 col-lg-3 d-flex">
+                                                <a
+                                                    href=""
+                                                    class="card-discussions-show-avatar-wrapper flex-shrink-0 rounded-circle overflow-hidden me-1"
+                                                >
+                                                    <img src="{{ url('assets/images/avatar-2.png') }}" alt="" />
+                                                </a>
+                                                <div class="fs-12px lh-1">
+                                                    <span class="text-primary">
+                                                        <a
+                                                            href=""
+                                                            class="fw-bold d-flex align-item-start text-break mb-1"
+                                                        >
+                                                            Faza Raditya Hamzah
+                                                        </a>
+                                                        <span class="color-gray">7 hours ago</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="fw-bold text-center">
                                 Please
                                 <a href="{{ route('auth.login.login') }}" class="text-primary">Log In</a>
@@ -184,47 +223,34 @@
             })
         })
 
-        $(document).ready(function () {
-            // Ketika elemen like diklik
-            $(document).on('click', '#discussion-like', function (e) {
-                e.preventDefault() // Mencegah link untuk melakukan redirect
+        $('#discussion-like').click(function () {
+            var isLiked = $(this).data('liked')
+            var likeRoute = isLiked
+                ? '{{ route('diskusi.like.unlike', $discussion->slug) }}'
+                : '{{ route('diskusi.like.like', $discussion->slug) }}' // Tambahkan else route
 
-                var slug = $(this).data('slug') // Ambil slug dari data attribute
-                var isLiked = $(this).data('liked') // Ambil status apakah sudah like atau belum
-
-                var likeIcon = $('#discussion-like-icon')
-                var likeCount = $('#discussion-like-count')
-
-                // Tentukan URL yang sesuai berdasarkan status like
-                var url = isLiked ? '/diskusi/' + slug + '/unlike' : '/diskusi/' + slug + '/like'
-
-                // Kirim request AJAX
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                    },
-                    success: function (response) {
-                        // Update gambar icon dan status like
-                        if (isLiked) {
-                            // Jika sebelumnya sudah like, jadi unlike
-                            likeIcon.attr('src', '/images/like.png')
-                            $(this).data('liked', 0)
-                        } else {
-                            // Jika sebelumnya belum like, jadi like
-                            likeIcon.attr('src', '/images/likee.png')
-                            $(this).data('liked', 1)
-                        }
-
-                        // Update jumlah like
-                        likeCount.text(response.likeCount)
-                    },
-                    error: function (xhr) {
-                        console.log(xhr.responseText)
-                    },
-                })
+            $.ajax({
+                method: 'POST',
+                url: likeRoute,
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
             })
+                .done(function (res) {
+                    if (res.status === 'success') {
+                        $('#discussion-like-count').text(res.data.likeCount)
+
+                        if (isLiked) {
+                            $('#discussion-like-icon').attr('src', '{{ $notLikedImage }}')
+                        } else {
+                            $('#discussion-like-icon').attr('src', '{{ $likedImage }}')
+                        }
+                        $('#discussion-like').data('liked', !isLiked) // Tambahkan tanda #
+                    }
+                })
+                .fail(function () {
+                    alert('Terjadi kesalahan. Coba lagi nanti.')
+                })
         })
     </script>
 @endsection

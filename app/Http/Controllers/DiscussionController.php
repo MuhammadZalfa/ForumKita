@@ -6,19 +6,19 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Discussion;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 
 class DiscussionController extends Controller
 {
     /**
      * Show the form for creating a new resource.
      */
+
     public function index(Request $request) {
         $discussions = Discussion::with('user', 'category');
 
-        if ($request->search) {
+        if ($request->search){
             $discussions->where('title', 'like', "%$request->search%")
-                ->orWhere('content', 'like', "%$request->search%");
+            ->orWhere('content', 'like', "%$request->search%");
         }
 
         return response()->view('pages.discussion.index', [
@@ -27,10 +27,11 @@ class DiscussionController extends Controller
             'categories' => Category::all(),
             'search' => $request->search,
         ]);
-    }
-
+    }   
+    
     public function create()
     {
+        // Mengambil semua kategori dari database
         return response()->view('pages.discussion.form', [
             'categories' => Category::all(),
         ]);
@@ -41,52 +42,65 @@ class DiscussionController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
+        \Log::info('Form Data:', $request->all());  // Debugging log
+
+        // Validasi input dari form
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_slug' => 'required|exists:categories,slug',
             'content' => 'required|string',
         ]);
 
+        // Ambil ID kategori berdasarkan slug
         $categoryId = Category::where('slug', $validated['category_slug'])->first()->id;
 
         // Set additional data
         $validated['category_id'] = $categoryId;
-        $validated['user_id'] = auth()->id();
-        $validated['slug'] = Str::slug($validated['title']) . '-' . time();
+        $validated['user_id'] = auth()->id(); // ID pengguna yang login
+        $validated['slug'] = Str::slug($validated['title']) . '-' . time(); // Membuat slug unik
 
+        // Strip HTML tags dan buat preview content jika panjangnya lebih dari 120 karakter
         $stripContent = strip_tags($validated['content']);
         $isContentLong = strlen($stripContent) > 120;
         $validated['content_preview'] = $isContentLong
-            ? (substr($stripContent, 0, 120) . '...')
+            ? (substr($stripContent, 0, 120) . '...') // Tambahkan preview jika konten panjang
             : $stripContent;
 
         // Create diskusi
         $create = Discussion::create($validated);
 
         if ($create) {
+            // Mengarahkan kembali dengan session success
             return redirect()->route('diskusi.index')->with('success', 'Diskusi berhasil dibuat!');
         }
 
+        // Jika gagal, tampilkan error
         return abort(500);
     }
 
     public function show(string $slug)
 {
-    $discussion = Discussion::with(['user', 'category'])->where('slug', $slug)->first();
-    $notLiked = url('assets/images/like.png');
-    $likedImage = url('assets/images/likee.png');
+    $discussion = Discussion::with('user', 'category') // Relasi yang diperlukan
+        ->where('slug', $slug) // Cari berdasarkan slug
+        ->first();
 
-    // Pastikan untuk memeriksa apakah user sudah login
-    $isLikedByUser = auth()->check() ? $discussion->likedByUser(auth()->user()) : false;
+    if (!$discussion) {
+        abort(404, 'Diskusi tidak ditemukan.');
+    }
+
+    $notLikedImage = asset('assets/images/like.png');
+    $likedImage = asset('assets/images/liked.png');
 
     return response()->view('pages.discussion.show', [
         'discussion' => $discussion,
         'categories' => Category::all(),
         'likedImage' => $likedImage,
-        'notLiked' => $notLiked,
-        'isLikedByUser' => $isLikedByUser, // Kirim status like ke view
+        'notLikedImage' => $notLikedImage
     ]);
 }
 
+
+
+    // Other methods (show, edit, update, destroy) bisa ditambahkan sesuai kebutuhan
 }
+

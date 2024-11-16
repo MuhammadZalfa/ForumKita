@@ -5,23 +5,19 @@ use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignUpController;
-use App\Http\Controllers\LikeController;
 
 // Route untuk halaman create dan store untuk resource diskusi
 Route::middleware('auth')->group(function () {
-    // Rute untuk resource diskusi
     Route::resource('diskusi', DiscussionController::class)
         ->only(['create', 'store', 'edit', 'update', 'destroy']);
-
-    // Rute untuk like dan unlike
-    // Routes untuk like dan unlike diskusi
-    Route::post('/diskusi/{slug}/like', [LikeController::class, 'likeDiscussion'])->name('diskusi.like.like');
-    Route::post('/diskusi/{slug}/unlike', [LikeController::class, 'unlikeDiscussion'])->name('diskusi.like.unlike');    
+    Route::post('diskusi/{discussion}/like', 'LikeController@discussionLike')->name('diskusi.like.like');
+    Route::post('diskusi/{discussion}/unlike', 'LikeController@discussionUnlike')->name('diskusi.like.unlike');
 });
 
-Route::resource('diskusi', DiscussionController::class)
-    ->only(['index', 'show']);
-
+Route::namespace('App\Http\Controllers')->group(function () {
+    Route::resource('diskusi', DiscussionController::class)
+        ->only(['index', 'show']);
+});
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
     // Resource route untuk diskusi

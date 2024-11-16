@@ -1,30 +1,34 @@
 <?php
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Conner\Likeable\Likeable;
 
 class Discussion extends Model
 {
-    // Define the relationship with users (many-to-many)
-    public function usersThatLiked()
+
+    use HasFactory, Likeable;
+    // Daftar kolom yang boleh diisi secara mass-assignment
+    protected $fillable = [
+        'user_id',
+        'category_id',
+        'title',
+        'slug',
+        'content_preview',
+        'content',
+    ];
+
+    // Relasi dengan model Category
+    public function category()
     {
-        return $this->belongsToMany(User::class, 'likes', 'discussion_id', 'user_id');
+        return $this->belongsTo(Category::class);
     }
 
-    // Method to check if a user has liked the discussion
-    public function likedByUser(User $user)
+    // Relasi dengan model User
+    public function user()
     {
-        return $this->usersThatLiked()->where('user_id', $user->id)->exists();
-    }
-
-    // Additional methods for liking/unliking (optional)
-    public function like(User $user)
-    {
-        return $this->usersThatLiked()->attach($user->id);
-    }
-
-    public function unlike(User $user)
-    {
-        return $this->usersThatLiked()->detach($user->id);
+        return $this->belongsTo(User::class);
     }
 }
