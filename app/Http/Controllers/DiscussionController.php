@@ -3,104 +3,149 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
 use App\Models\Discussion;
+use App\Models\Category;
 use Illuminate\Support\Str;
 
 class DiscussionController extends Controller
 {
-    /**
-     * Show the form for creating a new resource.
-     */
 
-    public function index(Request $request) {
-        $discussions = Discussion::with('user', 'category');
+    // Method untuk menampilkan detail diskusi berdasarkan slug
+public function show(string $slug)
+{
+    // Mengambil data diskusi dengan relasi
+    $discussion = Discussion::with('user', 'category')
+        ->where('slug', $slug)
+        ->first();
 
-        if ($request->search){
-            $discussions->where('title', 'like', "%$request->search%")
-            ->orWhere('content', 'like', "%$request->search%");
-        }
-
-        return response()->view('pages.discussion.index', [
-            'discussions' => $discussions->orderBy('created_at', 'desc')
-                ->paginate(10)->withQueryString(),
-            'categories' => Category::all(),
-            'search' => $request->search,
-        ]);
-    }   
-    
-    public function create()
-    {
-        // Mengambil semua kategori dari database
-        return response()->view('pages.discussion.form', [
-            'categories' => Category::all(),
-        ]);
+    // Jika tidak ditemukan
+    if (!$discussion) {
+        abort(404, 'Diskusi tidak ditemukan.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Mengirim data ke view
+    return view('pages.discussion.show', [
+        'discussion' => $discussion,
+        'categories' => Category::all(),
+        'likedImage' => asset('assets/images/liked.png'),
+        'notLikedImage' => asset('assets/images/like.png'),
+    ]);
+}
+
+
+    // Method untuk menampilkan daftar diskusi dengan paginasi
+    public function index(Request $request)
+    {
+        // Ambil semua diskusi dengan paginasi 10 item per halaman
+        $discussions = Discussion::latest()->paginate(10);
+
+        // Ambil semua kategori untuk ditampilkan di sidebar
+        $categories = Category::all();
+
+        // Jika ada pencarian atau filter kategori, ambil sesuai filter
+        if ($request->has('search') && $request->search != '') {
+            $discussions = Discussion::where('title', 'like', '%' . $request->search . '%')
+                                    ->latest()
+                                    ->paginate(10);
+        }
+
+        if ($request->has('category_slug') && $request->category_slug != '') {
+            $discussions = Discussion::where('category_slug', $request->category_slug)
+                                    ->latest()
+                                    ->paginate(10);
+        }
+
+        return view('pages.discussion.index', compact('discussions', 'categories'));
+    }
+
+    public function create()
+    {
+        $categories = Category::all(); // Ambil semua kategori
+        return view('diskusi.form', compact('categories'));
+    }
+
     public function store(Request $request)
     {
-        \Log::info('Form Data:', $request->all());  // Debugging log
-
-        // Validasi input dari form
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_slug' => 'required|exists:categories,slug',
             'content' => 'required|string',
         ]);
 
-        // Ambil ID kategori berdasarkan slug
-        $categoryId = Category::where('slug', $validated['category_slug'])->first()->id;
+        Discussion::create([
+            'title' => $validated['title'],
+            'slug' => Str::slug($validated['title']), // Generate slug otomatis
+            'category_slug' => $validated['category_slug'],
+            'content' => $validated['content'],
+            'user_id' => auth()->id(),
+        ]);
 
-        // Set additional data
-        $validated['category_id'] = $categoryId;
-        $validated['user_id'] = auth()->id(); // ID pengguna yang login
-        $validated['slug'] = Str::slug($validated['title']) . '-' . time(); // Membuat slug unik
-
-        // Strip HTML tags dan buat preview content jika panjangnya lebih dari 120 karakter
-        $stripContent = strip_tags($validated['content']);
-        $isContentLong = strlen($stripContent) > 120;
-        $validated['content_preview'] = $isContentLong
-            ? (substr($stripContent, 0, 120) . '...') // Tambahkan preview jika konten panjang
-            : $stripContent;
-
-        // Create diskusi
-        $create = Discussion::create($validated);
-
-        if ($create) {
-            // Mengarahkan kembali dengan session success
-            return redirect()->route('diskusi.index')->with('success', 'Diskusi berhasil dibuat!');
-        }
-
-        // Jika gagal, tampilkan error
-        return abort(500);
+        return redirect()->route('diskusi.index')->with('success', 'Discussion created successfully!');
     }
 
-    public function show(string $slug)
+    public function edit($slug)
 {
-    $discussion = Discussion::with('user', 'category') // Relasi yang diperlukan
-        ->where('slug', $slug) // Cari berdasarkan slug
-        ->first();
+    // Cari diskusi berdasarkan slug
+    $discussion = Discussion::where('slug', $slug)->firstOrFail();
 
-    if (!$discussion) {
-        abort(404, 'Diskusi tidak ditemukan.');
+    // Pastikan hanya pemilik yang bisa mengedit
+    if ($discussion->user_id !== auth()->id()) {
+        return redirect()->route('diskusi.index')->with('error', 'You do not have permission to edit this discussion.');
     }
 
-    $notLikedImage = asset('assets/images/like.png');
-    $likedImage = asset('assets/images/liked.png');
+    $categories = Category::all();
 
-    return response()->view('pages.discussion.show', [
-        'discussion' => $discussion,
-        'categories' => Category::all(),
-        'likedImage' => $likedImage,
-        'notLikedImage' => $notLikedImage
+    return view('pages.discussion.form', compact('discussion', 'categories'));
+}
+
+
+public function update(Request $request, $slug)
+{
+    // Validasi input
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'category_slug' => 'required|exists:categories,slug',
+        'content' => 'required|string',
     ]);
+
+    // Cari category_id berdasarkan category_slug
+    $category = Category::where('slug', $validated['category_slug'])->firstOrFail();
+
+    // Cari diskusi berdasarkan slug
+    $discussion = Discussion::where('slug', $slug)->firstOrFail();
+
+    // Pastikan hanya pemilik yang bisa update
+    if ($discussion->user_id !== auth()->id()) {
+        return redirect()->route('diskusi.index')->with('error', 'You do not have permission to edit this discussion.');
+    }
+
+    // Update diskusi dengan category_id
+    $discussion->update([
+        'title' => $validated['title'],
+        'slug' => Str::slug($validated['title']), // Update slug
+        'category_id' => $category->id, // Update category_id
+        'content' => $validated['content'],
+    ]);
+
+    return redirect()->route('diskusi.index')->with('success', 'Discussion updated successfully!');
+}
+
+public function destroy(string $slug)
+{
+    // Cari diskusi berdasarkan slug
+    $discussion = Discussion::where('slug', $slug)->firstOrFail();
+
+    // Pastikan hanya pemilik yang bisa menghapus
+    if ($discussion->user_id !== auth()->id()) {
+        return redirect()->route('diskusi.index')->with('error', 'You do not have permission to delete this discussion.');
+    }
+
+    // Hapus diskusi
+    $discussion->delete();
+
+    return redirect()->route('diskusi.index')->with('success', 'Discussion deleted successfully!');
 }
 
 
 
-    // Other methods (show, edit, update, destroy) bisa ditambahkan sesuai kebutuhan
 }
-

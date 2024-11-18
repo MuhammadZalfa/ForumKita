@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \Conner\Likeable\Likeable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Discussion extends Model
 {
 
-    use HasFactory, Likeable;
+    use HasFactory, Likeable, SoftDeletes; 
     // Daftar kolom yang boleh diisi secara mass-assignment
     protected $fillable = [
         'user_id',

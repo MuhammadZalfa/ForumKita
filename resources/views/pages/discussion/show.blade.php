@@ -6,8 +6,12 @@
             <div class="mb-5">
                 <div class="d-flex align-item-center">
                     <div class="d-flex">
-                        <div class="fs-2 fw-bold color-gray me-2 mb-0"><h2>Diskusi</h2></div>
-                        <div class="fs-2 fw-bold color-primary me-2 mb-0">></div>
+                        <div class="fs-2 fw-bold color-gray me-2 mb-0">
+                            <h2>
+                                Diskusi
+                                <span class="color-grayy">></span>
+                            </h2>
+                        </div>
                     </div>
                     <h2 class="mb-0">{{ $discussion->title }}</h2>
                 </div>
@@ -56,6 +60,36 @@
                                                     class="d-none"
                                                 />
                                             </span>
+
+                                            @if ($discussion->user_id == auth()->id())
+                                                <span class="color-gray">
+                                                    <a href="{{ route('diskusi.edit', $discussion->slug) }}">
+                                                        <small>Edit</small>
+                                                    </a>
+                                                    <input
+                                                        type="text"
+                                                        value="{{ route('diskusi.show', $discussion->slug) }}"
+                                                        id="current-url"
+                                                        class="d-none"
+                                                    />
+                                                </span>
+                                                <span class="color-gray">
+                                                    <!-- Link Hapus dengan konfirmasi SweetAlert -->
+                                                    <a href="javascript:;" id="delete-discussion">
+                                                        <small>Hapus</small>
+                                                    </a>
+                                                </span>
+
+                                                <form
+                                                    id="delete-form"
+                                                    action="{{ route('diskusi.destroy', $discussion->slug) }}"
+                                                    method="POST"
+                                                    style="display: none"
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                            @endif
                                         </div>
                                         <div class="col-5 col-lg-3 d-flex">
                                             <a
@@ -175,13 +209,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="fw-bold text-center">
-                                Please
-                                <a href="{{ route('auth.login.login') }}" class="text-primary">Log In</a>
-                                atau
-                                <a href="{{ route('auth.sign-up.sign-up') }}" class="text-primary">buat akun</a>
-                                untuk berpatisipasi dalam disksi ini.
-                            </div>
+                                @auth
+                                    <h3 class="mb-5">Your Answer</h3>
+
+                                    <div class="card card-discussions">
+                                        <form action="{{ route('diskusi.store', $discussion->slug) }}" method="POST">
+                                            @csrf
+                                            <div>
+                                                <label for="answer">Answer:</label>
+                                                <textarea id="answer" name="answer" required></textarea>
+                                            </div>
+                                            <button class="btn btn-primary" type="submit">Submit</button>
+                                        </form>                                        
+                                    </div>
+                                    @if(session('success'))
+                                        <div class="alert alert-success">
+                                            {{ session('success') }}
+                                        </div>
+                                    @endif
+                                @endauth
+                            @guest
+                                <div class="fw-bold text-center">
+                                    Please
+                                    <a href="{{ route('auth.login.login') }}" class="text-primary">Log In</a>
+                                    atau
+                                    <a href="{{ route('auth.sign-up.sign-up') }}" class="text-primary">buat akun</a>
+                                    untuk berpatisipasi dalam disksi ini.
+                                </div>
+                            @endguest
                         </div>
                     </div>
                     <div class="col-12 col-lg-4">
@@ -215,7 +270,7 @@
 
                 // SweetAlert untuk konfirmasi berhasil copy
                 Swal.fire({
-                    title: 'Berhasil!',
+                    title: 'Berhas; il!',
                     text: 'Link profil berhasil dicopy ke clipboard!',
                     icon: 'success',
                     confirmButtonText: 'Oke',
@@ -223,11 +278,29 @@
             })
         })
 
+        $('#answer').summernote({
+            height: 220,
+            placeholder: 'Your Solution',
+            tabsize: 2,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']],
+            ],
+        })
+
+        $('span.note-icon-caret').remove();
+        $('.note-editable').css('background-color', '#ffffff')
+        
         $('#discussion-like').click(function () {
             var isLiked = $(this).data('liked')
             var likeRoute = isLiked
-                ? '{{ route('diskusi.like.unlike', $discussion->slug) }}'
-                : '{{ route('diskusi.like.like', $discussion->slug) }}' // Tambahkan else route
+                ? '{{ route('diskusi.like', $discussion->slug) }}'
+                : '{{ route('diskusi.unlike', $discussion->slug) }}' // Tambahkan else route
 
             $.ajax({
                 method: 'POST',
@@ -236,21 +309,54 @@
                     _token: '{{ csrf_token() }}',
                 },
             })
+
+
                 .done(function (res) {
                     if (res.status === 'success') {
                         $('#discussion-like-count').text(res.data.likeCount)
 
                         if (isLiked) {
-                            $('#discussion-like-icon').attr('src', '{{ $notLikedImage }}')
-                        } else {
                             $('#discussion-like-icon').attr('src', '{{ $likedImage }}')
+                        } else {
+                            $('#discussion-like-icon').attr('src', '{{ $notLikedImage }}')
                         }
                         $('#discussion-like').data('liked', !isLiked) // Tambahkan tanda #
+                    } else if (res.status === 'not_logged_in') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Login Diperlukan',
+                            text: 'Anda harus login untuk memberikan like.',
+                            confirmButtonText: 'Login Sekarang',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '{{ route('auth.login.login') }}' // Ganti dengan route login kamu
+                            }
+                        })
                     }
                 })
                 .fail(function () {
-                    alert('Terjadi kesalahan. Coba lagi nanti.')
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan. Coba lagi nanti.',
+                    })
                 })
+        })
+
+        $('#delete-discussion').click(function () {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Data yang dihapus tidak dapat dikembalikan!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna memilih untuk menghapus, submit form penghapusan
+                    document.getElementById('delete-form').submit()
+                }
+            })
         })
     </script>
 @endsection

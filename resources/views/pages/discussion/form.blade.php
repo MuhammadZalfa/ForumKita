@@ -4,19 +4,24 @@
     <section class="bg-gray pt-4 pb-5">
         <div class="container">
             <div class="mb-5">
-                <div class="d-flex align-item-center">
-                    <div class="d-flex">
-                        <div class="fs-2 fw-bold color-gray me-2 mb-0">Ask a Question</div>
-                    </div>
-                </div>
+                <h2 class="fs-2 fw-bold color-gray mb-0">
+                    {{ isset($discussion) ? 'Edit Question' : 'Ask a Question' }}
+                </h2>
             </div>
             <div class="row">
-                <div class="col-12 col-lg-8 mb-5 mb-lg-0">
-                    <div class="card card-discussions mb-5">
+                <div class="col-12 col-lg-8 mb-5">
+                    <div class="card card-discussions">
                         <div class="row">
                             <div class="col-12">
-                                <form action="{{ route('diskusi.store') }}" method="POST">
+                                <form
+                                    action="{{ isset($discussion) ? route('diskusi.update', $discussion->slug) : route('diskusi.store') }}"
+                                    method="POST"
+                                >
                                     @csrf
+                                    @isset($discussion)
+                                        @method('PUT')
+                                    @endisset
+
                                     <div class="mb-3">
                                         <label for="title" class="form-label">Title</label>
                                         <input
@@ -25,7 +30,7 @@
                                             id="title"
                                             name="title"
                                             autofocus
-                                            value="{{ old('title') }}"
+                                            value="{{ $discussion->title ?? old('title') }}"
                                         />
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -42,7 +47,7 @@
                                             @foreach ($categories as $category)
                                                 <option
                                                     value="{{ $category->slug }}"
-                                                    @if (old('category_slug') === $category->slug) {{ 'selected' }} @endif
+                                                    @if (($discussion->category_slug ?? old('category_slug')) === $category->slug) {{ 'selected' }} @endif
                                                 >
                                                     {{ $category->name }}
                                                 </option>
@@ -59,15 +64,15 @@
                                             id="content"
                                             name="content"
                                         >
-{{ old('content') }}</textarea
+{{ $discussion->content ?? old('content') }}</textarea
                                         >
                                         @error('content')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="">
+                                    <div>
                                         <button class="btn btn-primary me-4" type="submit">Submit</button>
-                                        <a href="{{ route('diskusi.index') }}">Cancel</a>
+                                        <a href="{{ route('diskusi.index') }}" class="btn btn-secondary">Cancel</a>
                                     </div>
                                 </form>
                             </div>
@@ -96,25 +101,7 @@
                     ['view', ['fullscreen', 'codeview', 'help']],
                 ],
             })
-
-            // CSS custom buat background jadi putih
             $('.note-editable').css('background-color', '#ffffff')
-            $('.note-toolbar').css('background-color', '#ffffff').css('border', '1px solid #ddd')
-            $('.note-toolbar button').css('color', '#2e236c')
-            $('span.note-icon-caret').css('color', '#2e236c')
         })
-    </script>
-    <script>
-        $(document).ready(function () {
-            // SweetAlert on success message
-            @if(session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: '{{ session('success') }}',
-                    showConfirmButton: true,
-                });
-            @endif
-        });
     </script>
 @endsection

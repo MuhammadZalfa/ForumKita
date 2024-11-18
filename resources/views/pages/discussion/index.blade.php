@@ -57,7 +57,7 @@
                                         <h3>{{ $discussion->title }}</h3>
                                     </a>
                                     <p>
-                                        {!! Str::limit($discussion->content_preview, 90) !!}
+                                        {!! Str::limit($discussion->content, 90) !!}
                                     </p>
                                     <div class="row">
                                         <div class="col me-1 me-lg-2">
@@ -102,6 +102,7 @@
                         <div class="card card-dicussions">Currently there is no discussion</div>
                     @endforelse
 
+                    <!-- Pagination -->
                     {{ $discussions->links() }}
                 </div>
                 <div class="col-12 col-lg-4">
