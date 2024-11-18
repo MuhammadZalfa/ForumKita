@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Discussion;
+use App\Models\Answer;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
@@ -23,12 +24,17 @@ public function show(string $slug)
         abort(404, 'Diskusi tidak ditemukan.');
     }
 
+    $discussionAnswers = Answer::where('discussion_id', $discussion->id)
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
+
     // Mengirim data ke view
     return view('pages.discussion.show', [
         'discussion' => $discussion,
         'categories' => Category::all(),
         'likedImage' => asset('assets/images/liked.png'),
         'notLikedImage' => asset('assets/images/like.png'),
+        'discussionAnswers' => $discussionAnswers,
     ]);
 }
 
@@ -61,27 +67,32 @@ public function show(string $slug)
     public function create()
     {
         $categories = Category::all(); // Ambil semua kategori
-        return view('diskusi.form', compact('categories'));
+        return view('pages.discussion.form', compact('categories'));
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'category_slug' => 'required|exists:categories,slug',
-            'content' => 'required|string',
-        ]);
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'category_slug' => 'required|exists:categories,slug',
+        'content' => 'required|string',
+    ]);
 
-        Discussion::create([
-            'title' => $validated['title'],
-            'slug' => Str::slug($validated['title']), // Generate slug otomatis
-            'category_slug' => $validated['category_slug'],
-            'content' => $validated['content'],
-            'user_id' => auth()->id(),
-        ]);
+    $category = Category::where('slug', $validated['category_slug'])->firstOrFail();
 
-        return redirect()->route('diskusi.index')->with('success', 'Discussion created successfully!');
-    }
+    Discussion::create([
+        'title' => $validated['title'],
+        'slug' => Str::slug($validated['title']),
+        'category_id' => $category->id,
+        'content' => $validated['content'],
+        'content_preview' => Str::limit(strip_tags($validated['content']), 100), // Tambahkan preview
+        'user_id' => auth()->id(),
+    ]);
+
+    return redirect()->route('diskusi.index')->with('success', 'Discussion created successfully!');
+}
+
+
 
     public function edit($slug)
 {

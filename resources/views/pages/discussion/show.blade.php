@@ -39,9 +39,9 @@
                                     </span>
                                 </div>
                                 <div class="col-11">
-                                    <p>
+                                    <div>
                                         {!! $discussion->content !!}
-                                    </p>
+                                    </div>
                                     <div class="mb-3">
                                         <a href="{{ route('diskusi.kategori.show', $discussion->category->slug) }}">
                                             <span class="badge rounded-pill text-bg-light">
@@ -118,116 +118,95 @@
                             </div>
                         </div>
 
-                        <h3 class="mb-5">2 Jawaban</h3>
+                        @php
+                            $answerCount = $discussion->answers->count();
+                        @endphp
+
+                        <h3 class="mb-5">{{ $answerCount . '' . Str::plural(' Answers', $answerCount) }}</h3>
 
                         <div class="mb-5">
-                            <div class="card card-discussions mb-5">
-                                <div class="row align-items-center">
-                                    <div
-                                        class="col-1 d-inline-flex flex-column justify-content-start align-items-center text-center align-self-start"
-                                    >
-                                        <a href="">
-                                            <img
-                                                src="{{ url('assets/images/like.png') }}"
-                                                alt="like"
-                                                class="like-icon mb-1"
-                                            />
-                                        </a>
-                                        <span class="color-gray mb-1">12</span>
-                                    </div>
-                                    <div class="col-11">
-                                        <p>
-                                            lorem ipsum dolor sit amet contecstur lorem ipsum dolor sit amet
-                                            contecsturlorem ipsum dolor sit amet contecsturlorem ipsum dolor sit amet
-                                            contecstur
-                                        </p>
-                                        <div class="row align-item-end justify-content-end">
-                                            <div class="col-5 col-lg-3 d-flex">
-                                                <a
-                                                    href=""
-                                                    class="card-discussions-show-avatar-wrapper flex-shrink-0 rounded-circle overflow-hidden me-1"
-                                                >
-                                                    <img src="{{ url('assets/images/avatar-2.png') }}" alt="" />
-                                                </a>
-                                                <div class="fs-12px lh-1">
-                                                    <span class="text-primary">
-                                                        <a
-                                                            href=""
-                                                            class="fw-bold d-flex align-item-start text-break mb-1"
-                                                        >
-                                                            Faza Raditya Hamzah
-                                                        </a>
-                                                        <span class="color-gray">7 hours ago</span>
-                                                    </span>
-                                                </div>
-                                            </div>
+                            @forelse ($discussionAnswers as $answer)
+                                <div class="card card-discussions mb-5">
+                                    <div class="row align-items-center">
+                                        <div
+                                            class="col-1 d-inline-flex flex-column justify-content-start align-items-center text-center align-self-start"
+                                        >
+                                            <a
+                                                href="javascript:;"
+                                                data-id="{{ $answer->id }}"
+                                                data-liked="{{ $answer->liked() }}"
+                                                class="answer-like"
+                                            >
+                                                <img
+                                                    src="{{ $answer->liked() ? $likedImage : $notLikedImage }}"
+                                                    alt="like"
+                                                    class="answer-like-icon mb-1"
+                                                />
+                                            </a>
+                                            <span class="asnwer-like-count color-gray mb-1">
+                                                {{ $answer->likeCount }}
+                                            </span>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-discussions mb-5">
-                                <div class="row align-items-center">
-                                    <div
-                                        class="col-1 d-inline-flex flex-column justify-content-start align-items-center text-center align-self-start"
-                                    >
-                                        <a href="">
-                                            <img
-                                                src="{{ url('assets/images/like.png') }}"
-                                                alt="like"
-                                                class="like-icon mb-1"
-                                            />
-                                        </a>
-                                        <span class="color-gray mb-1">12</span>
-                                    </div>
-                                    <div class="col-11">
-                                        <p>
-                                            lorem ipsum dolor sit amet contecstur lorem ipsum dolor sit amet
-                                            contecsturlorem ipsum dolor sit amet contecsturlorem ipsum dolor sit amet
-                                            contecstur
-                                        </p>
-                                        <div class="row align-item-end justify-content-end">
-                                            <div class="col-5 col-lg-3 d-flex">
-                                                <a
-                                                    href=""
-                                                    class="card-discussions-show-avatar-wrapper flex-shrink-0 rounded-circle overflow-hidden me-1"
-                                                >
-                                                    <img src="{{ url('assets/images/avatar-2.png') }}" alt="" />
-                                                </a>
-                                                <div class="fs-12px lh-1">
-                                                    <span class="text-primary">
-                                                        <a
-                                                            href=""
-                                                            class="fw-bold d-flex align-item-start text-break mb-1"
-                                                        >
-                                                            Faza Raditya Hamzah
-                                                        </a>
-                                                        <span class="color-gray">7 hours ago</span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                                @auth
-                                    <h3 class="mb-5">Your Answer</h3>
-
-                                    <div class="card card-discussions">
-                                        <form action="{{ route('diskusi.store', $discussion->slug) }}" method="POST">
-                                            @csrf
+                                        <div class="col-11">
                                             <div>
-                                                <label for="answer">Answer:</label>
-                                                <textarea id="answer" name="answer" required></textarea>
+                                                {!! $answer->answer !!}
                                             </div>
-                                            <button class="btn btn-primary" type="submit">Submit</button>
-                                        </form>                                        
-                                    </div>
-                                    @if(session('success'))
-                                        <div class="alert alert-success">
-                                            {{ session('success') }}
+                                            <div class="row align-item-end justify-content-end">
+                                                <div class="col-5 col-lg-3 d-flex">
+                                                    <a
+                                                        href=""
+                                                        class="card-discussions-show-avatar-wrapper flex-shrink-0 rounded-circle overflow-hidden me-1"
+                                                    >
+                                                        <img
+                                                            src="{{ filter_var($answer->user->picture, FILTER_VALIDATE_URL) ? $discussion->user->picture : Storage::url($discussion->user->picture) }}"
+                                                            alt="{{ $answer->user->username }}"
+                                                            class="gambar"
+                                                        />
+                                                    </a>
+                                                    <div class="fs-12px lh-1">
+                                                        <span
+                                                            class="{{ $answer->user->username === $discussion->user->username ? 'text-primary' : '' }}"
+                                                        >
+                                                            <a
+                                                                href=""
+                                                                class="fw-bold d-flex align-item-start text-break mb-1"
+                                                            >
+                                                                {{ $answer->user->username }}
+                                                            </a>
+                                                            <span class="color-gray">7 hours ago</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    @endif
-                                @endauth
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="card card-discussions">Currently there is no answer</div>
+                            @endforelse
+
+                            {{ $discussionAnswers->links() }}
+
+                            @auth
+                                <h3 class="mb-5">Your Answer</h3>
+
+                                <div class="card card-discussions">
+                                    <form action="{{ route('answer.store', $discussion->slug) }}" method="POST">
+                                        @csrf
+                                        <div>
+                                            <label for="answer">Answer:</label>
+                                            <textarea id="answer" name="answer" required></textarea>
+                                        </div>
+                                        <button class="btn btn-primary" type="submit">Submit</button>
+                                    </form>
+                                </div>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                            @endauth
+
                             @guest
                                 <div class="fw-bold text-center">
                                     Please
@@ -293,15 +272,17 @@
             ],
         })
 
-        $('span.note-icon-caret').remove();
+        $('span.note-icon-caret').remove()
         $('.note-editable').css('background-color', '#ffffff')
-        
-        $('#discussion-like').click(function () {
-            var isLiked = $(this).data('liked')
-            var likeRoute = isLiked
-                ? '{{ route('diskusi.like', $discussion->slug) }}'
-                : '{{ route('diskusi.unlike', $discussion->slug) }}' // Tambahkan else route
 
+        $('#discussion-like').click(function () {
+            var $this = $(this) // Ambil elemen yang diklik
+            var isLiked = $this.data('liked') // Ambil status liked
+            var likeRoute = isLiked
+                ? '{{ route('diskusi.unlike', $discussion->slug) }}' // Rute unlike
+                : '{{ route('diskusi.like', $discussion->slug) }}' // Rute like
+
+            // Kirim permintaan AJAX
             $.ajax({
                 method: 'POST',
                 url: likeRoute,
@@ -309,36 +290,35 @@
                     _token: '{{ csrf_token() }}',
                 },
             })
-
-
                 .done(function (res) {
                     if (res.status === 'success') {
+                        // Perbarui like count
                         $('#discussion-like-count').text(res.data.likeCount)
 
+                        // Perbarui ikon like
                         if (isLiked) {
-                            $('#discussion-like-icon').attr('src', '{{ $likedImage }}')
-                        } else {
                             $('#discussion-like-icon').attr('src', '{{ $notLikedImage }}')
+                        } else {
+                            $('#discussion-like-icon').attr('src', '{{ $likedImage }}')
                         }
-                        $('#discussion-like').data('liked', !isLiked) // Tambahkan tanda #
+
+                        // Perbarui data liked
+                        $this.data('liked', !isLiked) // Perbaikan di sini
                     } else if (res.status === 'not_logged_in') {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Login Diperlukan',
-                            text: 'Anda harus login untuk memberikan like.',
-                            confirmButtonText: 'Login Sekarang',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '{{ route('auth.login.login') }}' // Ganti dengan route login kamu
-                            }
-                        })
+                        // Tampilkan pesan login
                     }
                 })
                 .fail(function () {
+                    // Tampilkan pesan error
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Terjadi kesalahan. Coba lagi nanti.',
+                        icon: 'warning',
+                        title: 'Login Diperlukan',
+                        text: 'Anda harus login untuk memberikan like.',
+                        confirmButtonText: 'Login Sekarang',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{{ route('auth.login.login') }}'
+                        }
                     })
                 })
         })
@@ -357,6 +337,56 @@
                     document.getElementById('delete-form').submit()
                 }
             })
+        })
+
+        $(document).on('click', '.answer-like', function () {
+            var $this = $(this) // Mengambil elemen yang diklik
+            var id = $this.data('id') // Mengambil data-id dari elemen
+            var isLiked = $this.data('liked') // Mengambil data-liked dari elemen
+            var likeRoute = isLiked
+                ? '{{ url('') }}/answers/' + id + '/unlike'
+                : '{{ url('') }}/answers/' + id + '/like'
+
+            $.ajax({
+                method: 'POST',
+                url: likeRoute,
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+            })
+                .done(function (res) {
+                    if (res.status === 'success') {
+                        // Update like count dan ikon
+                        $this.data('liked', !isLiked)
+                        $this
+                            .find('.answer-like-icon')
+                            .attr('src', isLiked ? '{{ $notLikedImage }}' : '{{ $likedImage }}')
+                        $this.siblings('.asnwer-like-count').text(res.data.likeCount) // Perbaikan manipulasi DOM
+                    } else if (res.status === 'not_logged_in') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Login Diperlukan',
+                            text: 'Anda harus login untuk memberikan like.',
+                            confirmButtonText: 'Login Sekarang',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '{{ route('auth.login.login') }}'
+                            }
+                        })
+                    }
+                })
+                .fail(function () {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Login Diperlukan',
+                        text: 'Anda harus login untuk memberikan like.',
+                        confirmButtonText: 'Login Sekarang',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{{ route('auth.login.login') }}'
+                        }
+                    })
+                })
         })
     </script>
 @endsection

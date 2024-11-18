@@ -76,7 +76,7 @@
                     </div>
                     <div class="text-center">
                         Don't have an account?
-                        <a href="{{ route('sign-up') }}" class="text-underline"><u>Sign Up</u></a>
+                        <a href="{{ route('auth.sign-up.sign-up') }}" class="text-underline"><u>Sign Up</u></a>
                     </div>
                 </div>
             </div>

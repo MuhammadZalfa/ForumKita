@@ -59,7 +59,7 @@
             <a class="nav-link text-nowrap {{ Route::currentRouteName() == 'auth.login.login' ? 'active' : ''}}" href="{{ route('auth.login.login')}}">Sign in</a>
           </li>
           <li class="nav-item ps-1 pe-0">
-            <a class="btn btn-primary-white" href="{{ route('sign-up')}}">Sign Up</a>
+            <a class="btn btn-primary-white" href="{{ route('auth.sign-up.sign-up')}}">Sign Up</a>
           </li>
           @endguest
         </ul>

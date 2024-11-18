@@ -9,17 +9,17 @@ class CreateAnswersTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::create('answers', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('discussion_id')->constrained()->onDelete('cascade');
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->text('answer');
-        $table->timestamps();
-    });
-}
-
+    public function up(): void
+    {
+        Schema::create('answers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('discussion_id')->constrained()->onDelete('cascade');
+            $table->text('answer');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
 
     /**
      * Reverse the migrations.

@@ -7,8 +7,8 @@
     <div class="col-12 col-lg-6">
         <h1>The Developer <br> Community Forum</h1>
         <p>Tempat berkumpulnya para profesional IT untuk berbagi pengetahuan, mendiskusikan teknologi terbaru, dan menyelesaikan tantangan yang dihadapi dalam dunia digital.</p>
-        <a href="{{ route('sign-up') }}" class="btn btn-primary me-2 mb-lg-0">Sign Up</a>
-        <a href="{{ route('sign-up') }}" class="btn btn-secondary mb-2 mb-lg-0">Join Diskusi</a>
+        <a href="{{ route('auth.sign-up.sign-up') }}" class="btn btn-primary me-2 mb-lg-0">Sign Up</a>
+        <a href="{{ route('auth.sign-up.sign-up') }}" class="btn btn-secondary mb-2 mb-lg-0">Join Diskusi</a>
     </div>
     <div class="col-12 col-lg-6 h-315px order-first order-lg-last mb-3 mb-lg-0">
       <img class="hero-image float-lg-end img-fluid" src="{{ url('assets/images/Hero.png') }}" alt="hero">
@@ -125,8 +125,8 @@
   <h2>Ready to contribute?</h2>
   <p class="mb-4">Want to make a big impact?</p>
   <div class="text-center">
-    <a href="{{ route('sign-up') }}" class="btn btn-primary me-2 mb-lg-0"> Sign Up</a>
-    <a href="{{ route('sign-up') }}" class="btn btn-secondary mb-2 mb-lg-0">Join Diskusi</a>
+    <a href="{{ route('auth.sign-up.sign-up') }}" class="btn btn-primary me-2 mb-lg-0"> Sign Up</a>
+    <a href="{{ route('auth.sign-up.sign-up') }}" class="btn btn-secondary mb-2 mb-lg-0">Join Diskusi</a>
   </div>
 </section>
 

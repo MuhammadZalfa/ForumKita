@@ -24,6 +24,24 @@ Route::get('/', function () {
 })->name('home');
 
 // ** Auth Routes **
+Route::middleware('auth')->group(function () {
+    // Resource routes untuk diskusi (hanya untuk user yang login)
+    Route::resource('diskusi', DiscussionController::class)
+        ->only(['create', 'store', 'edit', 'update', 'destroy']); // Private routes (auth-only)
+
+    // Like & Unlike untuk diskusi
+    Route::post('diskusi/{discussion}/like', [LikeController::class, 'discussionLike'])->name('diskusi.like');
+    Route::post('diskusi/{discussion}/unlike', [LikeController::class, 'discussionUnlike'])->name('diskusi.unlike');
+
+    // Store Jawaban
+    Route::post('/diskusi/{slug}/answers', [AnswerController::class, 'store'])->name('answer.store');
+
+    Route::post('answers/{answer}/like', [LikeController::class, 'answerLike'])->name('answers.like');
+    Route::post('answers/{answer}/unlike', [LikeController::class, 'answerUnlike'])->name('answers.unlike');
+});
+
+
+// ** Auth Routes **
 Route::prefix('auth')->group(function () {
     Route::get('login', [LoginController::class, 'show'])->name('auth.login.show');
     Route::post('login', [LoginController::class, 'login'])->name('auth.login.login');
