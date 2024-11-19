@@ -152,6 +152,33 @@
                                                 {!! $answer->answer !!}
                                             </div>
                                             <div class="row align-item-end justify-content-end">
+                                                <div class="col">
+                                                    @if ($answer->user_id === auth()->id())
+                                                        <span class="color-gray me-2">
+                                                            <a href="{{ route('answers.edit', $answer->id) }}">
+                                                                <span>Edit</span>
+                                                            </a>
+                                                        </span>
+                                                        <span class="color-gray me-2">
+                                                            <a
+                                                                href="javascript:;"
+                                                                data-id="{{ $answer->id }}"
+                                                                class="delete-answer"
+                                                            >
+                                                                <span>Delete</span>
+                                                            </a>
+                                                        </span>
+                                                        <form
+                                                            id="delete-answer-form-{{ $answer->id }}"
+                                                            action="{{ route('answers.destroy', $answer->id) }}"
+                                                            method="POST"
+                                                            style="display: none"
+                                                        >
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                    @endif
+                                                </div>
                                                 <div class="col-5 col-lg-3 d-flex">
                                                     <a
                                                         href=""
@@ -223,8 +250,10 @@
                             <h3>Semua Kategori</h3>
                             <div class="">
                                 @foreach ($categories as $category)
-                                    <a href="{{ route('diskusi.kategori.show', $category->id) }}">
-                                        <span class="badge rounded-pill text-bg-light">{{ $category->name }}</span>
+                                    <a href="{{ route('diskusi.kategori.show', $category->slug) }}">
+                                        <span class="badge rounded-pill text-bg-light">
+                                            {{ $category->name }}
+                                        </span>
                                     </a>
                                 @endforeach
                             </div>
@@ -267,7 +296,6 @@
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview', 'help']],
             ],
         })
@@ -335,6 +363,26 @@
                 if (result.isConfirmed) {
                     // Jika pengguna memilih untuk menghapus, submit form penghapusan
                     document.getElementById('delete-form').submit()
+                }
+            })
+        })
+        // Tambahkan event listener untuk tombol hapus
+        $(document).on('click', '.delete-answer', function (e) {
+            e.preventDefault() // Mencegah perilaku default dari link
+            const id = $(this).data('id') // Ambil ID dari elemen
+            const formId = `delete-answer-form-${id}` // Formulir penghapusan yang sesuai
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Data yang dihapus tidak dapat dikembalikan!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit form penghapusan setelah konfirmasi
+                    document.getElementById(formId).submit()
                 }
             })
         })

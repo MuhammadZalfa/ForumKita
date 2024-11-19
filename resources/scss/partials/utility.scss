@@ -2,6 +2,10 @@
     height: 32px;
 }
 
+body{
+    background-color: #fdf0d5;
+}
+
 .navbar-nav {
     .nav-link,
     active {
@@ -93,7 +97,7 @@
 }
 
 .card {
-    background-color: #c8acd6;
+    background-color: #fdf0d5;
     border: none;
     border-radius: 20px;
     padding: 24px;
@@ -112,7 +116,7 @@ a {
 }
 
 .color-gray {
-    color: #433d8b;
+    color: #780000;
 }
 
 .card--avatar-sm {
@@ -142,7 +146,7 @@ a {
 }
 
 footer {
-    background-color: #2e236c;
+    background-color: #c1121f;
 }
 
 .me-140px {
@@ -178,4 +182,10 @@ pre {
     width: 100%; /* atau ukuran spesifik */
     height: auto; /* menjaga rasio gambar */
     border-radius: 50%; /* jika ingin gambar bulat */
+    aspect-ratio: 1/1;
+}
+
+
+.bg-red{
+    background-color: #c1121f;
 }

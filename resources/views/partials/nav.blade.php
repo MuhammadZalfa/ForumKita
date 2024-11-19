@@ -1,7 +1,7 @@
 <nav class="navbar navbar-dark navbar-expand-lg bg-primary">
     <div class="container flex justify-content-between">
       <a class="navbar-link" href="{{ route('home') }}">
-        <img class="h-32px" src="{{ url('assets/images/ForumKita.png') }}" alt="Forum Logo">
+        <img class="h-32px" src="{{ url('assets/images/LogoForumKita.png') }}" alt="Forum Logo">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -11,10 +11,10 @@
           <li class="nav-item d-block d-lg-none d-xl-block">
             <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
           </li>
-            <a class="nav-link" href="{{ route('diskusi.index') }}">Diskusi</a>
+            <a class="nav-link" href="{{ route('diskusi.index') }}">Discussion</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-nowrap" href="">Tentang Kita</a>
+            <a class="nav-link text-nowrap" href="">About Us</a>
           </li>
         </ul>
         <form class="d-flex w-100 me-4 my-2 my-lg-0" role="search" action="{{ route('diskusi.index') }}" method="GET">
@@ -43,7 +43,7 @@
           </a>
           <ul class="dropdown-menu mt-2">
             <li>
-              <a class="dropdown-item" href="">My Profile</a>
+              <a class="dropdown-item" href="{{ route('users.show', auth()->user()->username)}}">My Profile</a>
             </li>
             <li>
               <form action="{{ route('auth.login.logout') }}" method="POST">

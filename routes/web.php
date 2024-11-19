@@ -7,6 +7,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignUpController;
+use App\Http\Controllers\My\UserController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,11 @@ Route::get('/', function () {
 
 // ** Auth Routes **
 Route::middleware('auth')->group(function () {
+
+    Route::namespace('App\Http\Controllers\My')->group(function () {
+        Route::resource('users', UserController::class)->only(['edit', 'update']);
+    });
+    
     // Resource routes untuk diskusi (hanya untuk user yang login)
     Route::resource('diskusi', DiscussionController::class)
         ->only(['create', 'store', 'edit', 'update', 'destroy']); // Private routes (auth-only)
@@ -36,6 +43,7 @@ Route::middleware('auth')->group(function () {
     // Store Jawaban
     Route::post('/diskusi/{slug}/answers', [AnswerController::class, 'store'])->name('answer.store');
 
+    Route::resource('answers', AnswerController::class)->only('edit', 'update', 'destroy');
     Route::post('answers/{answer}/like', [LikeController::class, 'answerLike'])->name('answers.like');
     Route::post('answers/{answer}/unlike', [LikeController::class, 'answerUnlike'])->name('answers.unlike');
 });
@@ -63,13 +71,16 @@ Route::middleware('auth')->group(function () {
     Route::post('diskusi/{discussion}/like', [LikeController::class, 'discussionLike'])->name('diskusi.like');
     Route::post('diskusi/{discussion}/unlike', [LikeController::class, 'discussionUnlike'])->name('diskusi.unlike');
 
-    Route::post('/discussion/{slug}/answers', [AnswerController::class, 'store'])->name('diskusi.store');
+    Route::post('/discussion/{slug}/answers', [AnswerController::class, 'store'])->name('answer.store');
+});
+
+Route::namespace('App\Http\Controllers\My')->group(function () {
+    Route::get('users/{username}', [UserController::class, 'show'])->name('users.show');
 });
 
 // ** Kategori Diskusi Routes **
 Route::get('diskusi/kategori/{categorySlug}', [CategoryController::class, 'show'])->name('diskusi.kategori.show');
 
-// ** Profil User (Optional Dummy Route) **
-Route::get('diskusi/lorem', function () {
-    return view('pages.users.show');
-})->name('profile');
+Route::namespace('App\Http\Controllers')->group(function(){
+    Route::get('/', 'HomeController@index')->name('home');
+});

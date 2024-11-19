@@ -20,106 +20,64 @@
   <div class="row">
     <div class="col-12 col-lg-4 text-center">
       <img class="promote-icon mb-2" src="{{ url('assets/images/discussions.png') }}" alt="discussions">
-      <h2>Discussions</h2>
-      <p class="fs-3">2343</p>
+      <h2>{{ Str::plural('Discussion', $discussionCount) }}</h2>
+<p class="fs-3">{{ $discussionCount }}</p>
     </div>
     <div class="col-12 col-lg-4 text-center">
       <img class="promote-icon mb-2" src="{{ url('assets/images/answers.png') }}" alt="answers">
-      <h2>Answers</h2>
-      <p class="fs-3">3255</p>
+      <h2>{{ Str::plural('Answer', $answerCount) }}</h2>
+      <p class="fs-3">{{ $answerCount }}</p>
     </div>
     <div class="col-12 col-lg-4 text-center">
       <img class="promote-icon mb-2" src="{{ url('assets/images/users.png') }}" alt="users">
-      <h2>Users</h2>
-      <p class="fs-3">12312</p>
+      <h2>{{ Str::plural('User', $userCount) }}</h2>
+      <p class="fs-3">{{ $userCount }}</p>
     </div>
 </section>
 
-<section class="bg-gray">
+<section class="bg-red">
   <div class="container py-80px">
-    <h2 class="text-center mb-5">Help Others</h2>
+    <h2 class="text-center mb-5 text-white">Help Others</h2>
     <div class="row">
-      <div class="col-12 col-lg-4 mb-3">
-        <div class="card">
-          <a href="">
-            <h3>'Property of Non-Object' Error</h3>
-          </a>
-          <div>
-            <p class="mb-5">I'm trying to access a pivot table column value in Blade. When I dd() the following line, I...</p>
-            <div class="row">
-              <div class="col me-1 me-lg-2">
-                <a href=""><span class="badge rounded-pill text-bg-light ">Programming & Coding</span></a>
-              </div>
-              <div class="col-5 col-lg-7">
-                <div class="avatar-sm-wrapper d-inline-block">
-                  <a href="" class="me-1">
-                    <img src="{{ url('assets/images/avatar.png') }}" class="avatar rounded-circle" alt="">
+      @forelse ($latestDiscussions as $itemLatestDiscussion)
+        <div class="col-12 col-lg-4 mb-3">
+          <div class="card">
+            <a href="{{ route('diskusi.show', $itemLatestDiscussion->slug)}}">
+              <h3>{{ $itemLatestDiscussion->title }}</h3>
+            </a>
+            <div>
+              <p class="mb-5">{{ Str::limit($itemLatestDiscussion->content_preview, 35) }}</p>
+              <div class="row">
+                <div class="col me-1 me-lg-2">
+                  <a href="{{ route('diskusi.kategori.show', $itemLatestDiscussion->category->slug) }}">
+                    <span class="badge rounded-pill text-bg-light ">{{ $itemLatestDiscussion->category->name }}</span>
                   </a>
                 </div>
-                <span class="fs-12px">
-                  <a href="" class="me-1 fw-bold">Faza  Radit</a>
-                  <span class="color-gray">7 hours ago</span>
-                </span>
+              </div>
+              <!-- Menambahkan username, created_at dan foto profil di bawah kategori -->
+              <div class="row mt-3">
+                <div class="col-12 d-flex align-items-center">
+                  <div class="avatar-sm-wrapper d-inline-block">
+                    <a href="" class="me-1">
+                      <img src="{{ filter_var($itemLatestDiscussion->user->picture, FILTER_VALIDATE_URL) ? $itemLatestDiscussion->user->picture : Storage::url($itemLatestDiscussion->user->picture) }}" class="avatar rounded-circle" alt="">
+                    </a>
+                  </div>
+                  <span class="fs-12px ms-2">
+                    <a href="{{ route('users.show', $itemLatestDiscussion->user->username)}}" class="me-1 fw-bold">{{ $itemLatestDiscussion->user->username }}</a>
+                    <span class="color-gray">{{ $itemLatestDiscussion->created_at->diffForHumans() }}</span>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-12 col-lg-4 mb-3">
-        <div class="card">
-          <a href="">
-            <h3>Middleware go looping sometimes</h3>
-          </a>
-          <div>
-            <p class="mb-5">Can you guys know why my user entering a redirect loop sometimes? It's happened very ...</p>
-            <div class="row">
-              <div class="col me-1 me-lg-2">
-                <a href=""><span class="badge rounded-pill text-bg-light ">Programming & Coding</span></a>
-              </div>
-              <div class="col-5 col-lg-7">
-                <div class="avatar-sm-wrapper d-inline-block">
-                  <a href="" class="me-1">
-                    <img src="{{ url('assets/images/avatar.png') }}" class="avatar rounded-circle" alt="">
-                  </a>
-                </div>
-                <span class="fs-12px">
-                  <a href="" class="me-1 fw-bold">Sultan Syaeful</a>
-                  <span class="color-gray">7 hours ago</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-lg-4 mb-3">
-        <div class="card">
-          <a href="">
-            <h3>How to add a custom validation in laravel 11?</h3>
-          </a>
-          <div>
-            <p class="mb-5">I am working on a blogging application in Laravel 8. There are 4 user roles, among which, the.../p>
-            <div class="row">
-              <div class="col me-1 me-lg-2">
-                <a href=""><span class="badge rounded-pill text-bg-light ">Programming & Coding</span></a>
-              </div>
-              <div class="col-5 col-lg-7">
-                <div class="avatar-sm-wrapper d-inline-block">
-                  <a href="" class="me-1">
-                    <img src="{{ url('assets/images/avatar.png') }}" class="avatar rounded-circle" alt="">
-                  </a>
-                </div>
-                <span class="fs-12px">
-                  <a href="" class="me-1 fw-bold">Agung Rahayu</a>
-                  <span class="color-gray">7 hours ago</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      @empty
+        <p>No discussions available.</p>
+      @endforelse
     </div>
   </div>
 </section>
+
 
 <section class="container min-h-372px d-flex flex-column align-items-center justify-content-center">
   <h2>Ready to contribute?</h2>

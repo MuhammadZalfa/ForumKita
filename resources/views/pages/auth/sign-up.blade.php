@@ -10,7 +10,7 @@
                         <p>
                             <ul>
                                 <li>Stuck di error? diskusikan di ForumKita</li>
-                                <li>Dapatkan Jawab dari developer•••••• yang berpengalaman dari seluruh dunia</li>
+                                <li>Dapatkan Jawab dari developer yang berpengalaman dari seluruh dunia</li>
                                 <li>Berkontribusi dengan menjawab pertanyaan</li>
                             </ul>
                         </p>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-12 col-lg-3 h-100">
                     <a href="" class="nav-link mb-5 text-center">
-                        <img src="{{ url('assets/images/LogoForumKitaa.png') }}" alt="" class="h-32px">
+                        <img src="{{ url('assets/images/ForumKita.png') }}" alt="" class="h-32px">
                     </a>
                     <div class="cardd mb-5">
                         <form action="{{ route('auth.sign-up.sign-up') }}" method="POST">

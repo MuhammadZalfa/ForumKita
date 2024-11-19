@@ -31,7 +31,7 @@ class SignUpController extends Controller
         // Login otomatis jika pembuatan berhasil
         if ($create) {
             Auth::login($create);
-            return redirect()->route('diskusi'); // pastikan nama route benar
+            return redirect()->route('diskusi.index'); // pastikan nama route benar
         }
 
         // Jika ada kesalahan saat menyimpan, beri respon error 500
