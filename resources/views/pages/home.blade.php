@@ -2,7 +2,7 @@
 
 @section('body')
 
-<section class="container hero">
+<section class="container hero" id="#about">
   <div class="row align-items-center h-100">
     <div class="col-12 col-lg-6">
         <h1>The Developer <br> Community Forum</h1>

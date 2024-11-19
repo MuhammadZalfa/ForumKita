@@ -20,11 +20,6 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-// ** Route Home **
-Route::get('/', function () {
-    return view('home');
-})->name('home');
-
 // ** Auth Routes **
 Route::middleware('auth')->group(function () {
 
